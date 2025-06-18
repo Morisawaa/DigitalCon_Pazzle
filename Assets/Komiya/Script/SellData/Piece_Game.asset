@@ -16,7 +16,8 @@ MonoBehaviour:
   - {x: 0, y: 0}
   TextPos:
   - {x: 0, y: 0}
-  BlockChar: 4700
+  BlockChar:
+  - GGG
   TextSize: 8
   MinoType: 
   ParentParameter: 0

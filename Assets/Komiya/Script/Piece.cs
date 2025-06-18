@@ -7,6 +7,7 @@ public class Piece : MonoBehaviour
     public ShapeData shapeData;
     public GameObject cellPrefab; // ブロック1つ分のプレハブ
 
+    [Header("セルのサイズ")] public Vector2 CellSize = new Vector2(1.0f, 1.0f);
     [Header("テキスト設定")]
     public TextMeshPro textPrefab; // TextMeshProのプレハブをここに設定
 
@@ -45,9 +46,12 @@ public class Piece : MonoBehaviour
 
         foreach (Vector2Int cellPosition in currentCellPositions)
         {
-            Vector3 worldPosition = new Vector3(cellPosition.x, cellPosition.y, 0);
-            Instantiate(cellPrefab, transform.position + worldPosition, Quaternion.identity, this.transform);
-        }
+            Vector3 worldPosition = new Vector3(
+                cellPosition.x * CellSize.x,
+                cellPosition.y * CellSize.y,
+                0
+                );
+                }
     }
 
     // 文字を生成する処理
@@ -65,13 +69,16 @@ public class Piece : MonoBehaviour
         // forループで、インデックス(i)を使いながら両方のリストにアクセスする
         for (int i = 0; i < shapeData.BlockChar.Count; i++)
         {
-            char character = shapeData.BlockChar[i];
+            string character = shapeData.BlockChar[i];
             Vector2Int textGridPos = currentTextPositions[i];
 
             // テキストのワールド座標を計算
             // ブロックより少し手前(Z値を小さく)に表示すると、重なった時に見やすい
-            Vector3 textWorldPos = new Vector3(textGridPos.x, textGridPos.y, -0.1f);
-
+            Vector3 textWorldPos = new Vector3(
+                textGridPos.x * CellSize.x,
+                textGridPos.y * CellSize.y,
+                -0.1f // Z値はそのまま
+            );
             // プレハブから新しいテキストオブジェクトを生成し、このPieceの子にする
             TextMeshPro newText = Instantiate(textPrefab, this.transform);
             newText.transform.localPosition = textWorldPos;

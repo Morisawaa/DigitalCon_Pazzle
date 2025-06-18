@@ -13,7 +13,9 @@ public class ShapeData : ScriptableObject
     [Header("BockTextを出す座標リスト")]
     public List<Vector2Int> TextPos;
     [Header("ブロック上に出す文字")]
-    public List<char> BlockChar;
+    public List<string> BlockChar;
+    //[Header("ブロック上に出す文字")]
+    //public List<char> BlockChar;
     [Header("文字のサイズ")]
     public float TextSize = 8;
 
