@@ -148,7 +148,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f146f57972b94942a05aa10acac70b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shapeData: {fileID: 11400000, guid: a3b9b5c4045166841abf82a1e6395b05, type: 2}
+  shapeData: {fileID: 11400000, guid: 4c0fc101b6b698241ac135a044a83eea, type: 2}
   cellPrefab: {fileID: 9216279357368621284, guid: 289ceece4b410804d8357917b972211f, type: 3}
   textPrefab: {fileID: 4480307111500946061, guid: e368ed200b07a314dbc40dd525cfbdd4, type: 3}
 --- !u!4 &248630548

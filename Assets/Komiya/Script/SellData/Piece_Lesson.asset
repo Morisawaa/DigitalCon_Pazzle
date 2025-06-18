@@ -19,7 +19,7 @@ MonoBehaviour:
   TextPos:
   - {x: 0, y: 0}
   BlockChar: 4c00
-  TextSize: 0
+  TextSize: 8
   MinoType: 
   ParentParameter: 0
   ChildParameter: 0

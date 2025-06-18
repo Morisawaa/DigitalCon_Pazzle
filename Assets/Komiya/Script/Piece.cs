@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro; // TextMeshProを使うために必要！
+using System.Collections.Generic;
 
 public class Piece : MonoBehaviour
 {
@@ -9,18 +10,40 @@ public class Piece : MonoBehaviour
     [Header("テキスト設定")]
     public TextMeshPro textPrefab; // TextMeshProのプレハブをここに設定
 
+    // 現在のピースの状態を保持するリスト
+    private List<Vector2Int> currentCellPositions;
+    private List<Vector2Int> currentTextPositions;
+
     void Start()
     {
+        // ShapeDataから現在の状態へデータをコピーして初期化
+        currentCellPositions = new List<Vector2Int>(shapeData.Cells);
+        currentTextPositions = new List<Vector2Int>(shapeData.TextPos);
+
+
         GenerateCells();
         GenerateTexts(); // テキストを生成する処理を呼び出す
     }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            Rotate(false);
+        }
+        else if(Input.GetKeyDown(KeyCode.D))
+        {
+            Rotate(true);
+        }
+    }
+
 
     // ブロックのセルを生成する処理
     void GenerateCells()
     {
         if (shapeData == null) return;
 
-        foreach (Vector2Int cellPosition in shapeData.Cells)
+        foreach (Vector2Int cellPosition in currentCellPositions)
         {
             Vector3 worldPosition = new Vector3(cellPosition.x, cellPosition.y, 0);
             Instantiate(cellPrefab, transform.position + worldPosition, Quaternion.identity, this.transform);
@@ -43,7 +66,7 @@ public class Piece : MonoBehaviour
         for (int i = 0; i < shapeData.BlockChar.Count; i++)
         {
             char character = shapeData.BlockChar[i];
-            Vector2Int textGridPos = shapeData.TextPos[i];
+            Vector2Int textGridPos = currentTextPositions[i];
 
             // テキストのワールド座標を計算
             // ブロックより少し手前(Z値を小さく)に表示すると、重なった時に見やすい
@@ -57,5 +80,41 @@ public class Piece : MonoBehaviour
             newText.text = character.ToString();
             newText.fontSize = shapeData.TextSize;
         }
+    }
+
+    // 回転処理の本体
+    private void Rotate(bool clockwise)
+    {
+        // 1. 各座標リストを回転させる
+        // セルの回転
+        for (int i = 0; i < currentCellPositions.Count; i++)
+        {
+            Vector2Int pos = currentCellPositions[i];
+            currentCellPositions[i] = clockwise ? new Vector2Int(pos.y, -pos.x) : new Vector2Int(-pos.y, pos.x);
+        }
+
+        // テキスト位置の回転
+        for (int i = 0; i < currentTextPositions.Count; i++)
+        {
+            Vector2Int pos = currentTextPositions[i];
+            currentTextPositions[i] = clockwise ? new Vector2Int(pos.y, -pos.x) : new Vector2Int(-pos.y, pos.x);
+        }
+
+        // 2. 再描画する
+        RedrawPiece();
+    }
+
+    // ピースを再描画する処理
+    private void RedrawPiece()
+    {
+        // 既存のセルとテキストをすべて削除
+        foreach (Transform child in transform)
+        {
+            Destroy(child.gameObject);
+        }
+
+        // 新しい座標で再生成
+        GenerateCells();
+        GenerateTexts();
     }
 }
