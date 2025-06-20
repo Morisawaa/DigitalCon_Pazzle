@@ -2,57 +2,69 @@ using UnityEngine;
 
 public class PieceController : MonoBehaviour
 {
-    private Vector3 offset; // ƒ}ƒEƒXƒJ[ƒ\ƒ‹‚ÆƒIƒuƒWƒFƒNƒg’†S‚Ì·•ª
-    private Vector3 initialPosition; // ƒhƒ‰ƒbƒOŠJn‚ÌˆÊ’u
-    private Vector3 initialScale; // ƒhƒ‰ƒbƒOŠJn‚ÌƒXƒP[ƒ‹
+    private Vector3 offset; // ï¿½}ï¿½Eï¿½Xï¿½Jï¿½[ï¿½\ï¿½ï¿½ï¿½ÆƒIï¿½uï¿½Wï¿½Fï¿½Nï¿½gï¿½ï¿½ï¿½Sï¿½Ìï¿½ï¿½ï¿½
+    private Vector3 initialPosition; // ï¿½hï¿½ï¿½ï¿½bï¿½Oï¿½Jï¿½nï¿½ï¿½ï¿½ÌˆÊ’u
+    private Vector3 initialScale; // ï¿½hï¿½ï¿½ï¿½bï¿½Oï¿½Jï¿½nï¿½ï¿½ï¿½ÌƒXï¿½Pï¿½[ï¿½ï¿½
 
     [HideInInspector]
-    public bool isPlaced = false; // ƒOƒŠƒbƒh‚É”z’uÏ‚İ‚©
+    public bool isPlaced = false; // ï¿½Oï¿½ï¿½ï¿½bï¿½hï¿½É”zï¿½uï¿½Ï‚İ‚ï¿½
 
+    // ï¿½hï¿½ï¿½ï¿½bï¿½Oï¿½Jï¿½nï¿½ï¿½
     private void OnMouseDown()
     {
-        // ƒ[ƒ‹ƒhÀ•WŒn‚Å‚Ìƒ}ƒEƒX‚Æ‚Ì·•ª‚ğŒvZ
-        offset = transform.position - GetMouseWorldPos();
-        initialPosition = transform.position;
-
-        // ‚à‚µ”z’uÏ‚İ‚È‚çAƒOƒŠƒbƒh‚©‚ç“o˜^‚ğ‰ğœ‚·‚é
-        if (isPlaced)
-        {
-            GridManager.Instance.UnregisterPiece(this);
-            isPlaced = false;
-        }
-
-        // ƒhƒ‰ƒbƒO’†‚Í­‚µè‘O‚É•\¦‚·‚é
-        transform.position = new Vector3(transform.position.x, transform.position.y, -5f);
+        GridManager.Instance.UnregisterPiece(this);
+        // ...ï¿½ï¿½ï¿½Ìï¿½ï¿½ï¿½
     }
 
+    // ï¿½hï¿½ï¿½ï¿½bï¿½Oï¿½Iï¿½ï¿½ï¿½ï¿½ï¿½iï¿½hï¿½ï¿½ï¿½bï¿½vï¿½ï¿½ï¿½j
+    private void OnMouseUp()
+    {
+        Vector3 worldPos = transform.position;
+        Vector2Int gridPos = GridManager.Instance.WorldToGridPosition(worldPos);
+
+        if (GridManager.Instance.CanPlacePiece(this, gridPos))
+        {
+            GridManager.Instance.RegisterPiece(this, gridPos);
+            isPlaced = true;
+            // ï¿½Kï¿½vï¿½È‚ï¿½transform.positionï¿½ï¿½GridToWorldPositionï¿½ÅƒXï¿½iï¿½bï¿½v
+            transform.position = GridManager.Instance.GridToWorldPosition(gridPos.x, gridPos.y);
+        }
+        else
+        {
+            // ï¿½zï¿½uï¿½Å‚ï¿½ï¿½È‚ï¿½ï¿½ê‡ï¿½Ìï¿½ï¿½ï¿½ï¿½iï¿½ï¿½ï¿½ÌˆÊ’uï¿½É–ß‚ï¿½ï¿½ï¿½ï¿½j
+            isPlaced = false;
+        }
+    }
+
+    // ï¿½hï¿½ï¿½ï¿½bï¿½Oï¿½ï¿½
     private void OnMouseDrag()
     {
-        // ƒ}ƒEƒX‚Ì“®‚«‚É‡‚í‚¹‚Äƒs[ƒX‚ğˆÚ“®
+        // ï¿½}ï¿½Eï¿½Xï¿½Ì“ï¿½ï¿½ï¿½ï¿½Éï¿½ï¿½í‚¹ï¿½Äƒsï¿½[ï¿½Xï¿½ï¿½Ú“ï¿½
         transform.position = GetMouseWorldPos() + offset;
     }
 
-    private void OnMouseUp()
+    // ï¿½}ï¿½Eï¿½Xï¿½ğ—£‚ï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½ï¿½ï¿½iï¿½dï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½OnMouseUpï¿½ï¿½íœï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½ï¿½ï¿½ï¿½OnMouseUpï¿½É“ï¿½ï¿½ï¿½ï¿½j
+    private void HandleMouseRelease()
     {
-        // Å‚à‹ß‚¢ƒOƒŠƒbƒh‚Ì’†SÀ•W‚ğŒvZ
+        // ï¿½Å‚ï¿½ß‚ï¿½ï¿½Oï¿½ï¿½ï¿½bï¿½hï¿½Ì’ï¿½ï¿½Sï¿½ï¿½ï¿½Wï¿½ï¿½vï¿½Z
         Vector2Int gridPos = GridManager.Instance.WorldToGridPosition(transform.position);
 
-        // ‚»‚ÌêŠ‚É”z’u‰Â”\‚©ƒ`ƒFƒbƒN
+        // ï¿½ï¿½ï¿½ÌêŠï¿½É”zï¿½uï¿½Â”\ï¿½ï¿½ï¿½`ï¿½Fï¿½bï¿½N
         if (GridManager.Instance.CanPlacePiece(this, gridPos))
         {
-            // --- ”z’u¬Œ÷ ---
-            // ƒOƒŠƒbƒh‚ÉƒXƒiƒbƒv‚³‚¹‚é
+            // --- ï¿½zï¿½uï¿½ï¿½ï¿½ï¿½ ---
+            // ï¿½Oï¿½ï¿½ï¿½bï¿½hï¿½ÉƒXï¿½iï¿½bï¿½vï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
             transform.position = GridManager.Instance.GridToWorldPosition(gridPos.x, gridPos.y);
-            // ƒOƒŠƒbƒhƒ}ƒl[ƒWƒƒ[‚Éƒs[ƒX‚ğ“o˜^‚·‚é
+            // ï¿½Oï¿½ï¿½ï¿½bï¿½hï¿½}ï¿½lï¿½[ï¿½Wï¿½ï¿½ï¿½[ï¿½Éƒsï¿½[ï¿½Xï¿½ï¿½oï¿½^ï¿½ï¿½ï¿½ï¿½
             GridManager.Instance.RegisterPiece(this, gridPos);
             isPlaced = true;
         }
         else
         {
-            // --- ”z’u¸”s ---
-            // Œ³‚ÌˆÊ’u‚É–ß‚·
+            // --- ï¿½zï¿½uï¿½ï¿½ï¿½s ---
+            // ï¿½ï¿½ï¿½ÌˆÊ’uï¿½É–ß‚ï¿½
             transform.position = initialPosition;
-            // ‚à‚µƒhƒ‰ƒbƒOŠJn‚É”z’uÏ‚İ‚¾‚Á‚½‚È‚çAÄ“o˜^‚·‚é
+            // ï¿½ï¿½ï¿½ï¿½hï¿½ï¿½ï¿½bï¿½Oï¿½Jï¿½nï¿½ï¿½ï¿½É”zï¿½uï¿½Ï‚İ‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È‚ï¿½Aï¿½Ä“oï¿½^ï¿½ï¿½ï¿½ï¿½
             if (GridManager.Instance.CanPlacePiece(this, GridManager.Instance.WorldToGridPosition(initialPosition)))
             {
                 GridManager.Instance.RegisterPiece(this, GridManager.Instance.WorldToGridPosition(initialPosition));
@@ -60,14 +72,14 @@ public class PieceController : MonoBehaviour
             }
         }
 
-        // ZÀ•W‚ğŒ³‚É–ß‚·
+        // Zï¿½ï¿½ï¿½Wï¿½ï¿½ï¿½ï¿½É–ß‚ï¿½
         transform.position = new Vector3(transform.position.x, transform.position.y, 0f);
 
-        // ƒQ[ƒ€ƒNƒŠƒAƒ`ƒFƒbƒN‚ğŒÄ‚Ño‚·
+        // ï¿½Qï¿½[ï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½Aï¿½`ï¿½Fï¿½bï¿½Nï¿½ï¿½Ä‚Ñoï¿½ï¿½
         GameController.Instance.CheckGameCompletion();
     }
 
-    // ƒ}ƒEƒXƒJ[ƒ\ƒ‹‚ÌˆÊ’u‚ğƒ[ƒ‹ƒhÀ•W‚Åæ“¾‚·‚éƒwƒ‹ƒp[ŠÖ”
+    // ï¿½}ï¿½Eï¿½Xï¿½Jï¿½[ï¿½\ï¿½ï¿½ï¿½ÌˆÊ’uï¿½ï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½hï¿½ï¿½ï¿½Wï¿½Åæ“¾ï¿½ï¿½ï¿½ï¿½wï¿½ï¿½ï¿½pï¿½[ï¿½Öï¿½
     private Vector3 GetMouseWorldPos()
     {
         Vector3 mousePoint = Input.mousePosition;

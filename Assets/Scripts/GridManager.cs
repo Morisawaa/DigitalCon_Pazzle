@@ -4,7 +4,7 @@ public class GridManager : MonoBehaviour
 {
     public static GridManager Instance { get; private set; }
 
-    [Header("ƒOƒŠƒbƒhÝ’è")]
+    [Header("ï¿½Oï¿½ï¿½ï¿½bï¿½hï¿½Ý’ï¿½")]
     public int width = 4;
     public int height = 4;
     public float cellSize = 1.0f;
@@ -25,7 +25,7 @@ public class GridManager : MonoBehaviour
         grid = new Transform[width, height];
     }
 
-    // ƒ[ƒ‹ƒhÀ•W -> ƒOƒŠƒbƒhÀ•W
+    // ï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½hï¿½ï¿½ï¿½W -> ï¿½Oï¿½ï¿½ï¿½bï¿½hï¿½ï¿½ï¿½W
     public Vector2Int WorldToGridPosition(Vector3 worldPosition)
     {
         int x = Mathf.FloorToInt((worldPosition.x - originPosition.x) / cellSize);
@@ -33,7 +33,7 @@ public class GridManager : MonoBehaviour
         return new Vector2Int(x, y);
     }
 
-    // ƒOƒŠƒbƒhÀ•W -> ƒ[ƒ‹ƒhÀ•WiƒZƒ‹‚Ì’†S‚ð•Ô‚·‚æ‚¤‚ÉC³j
+    // ï¿½Oï¿½ï¿½ï¿½bï¿½hï¿½ï¿½ï¿½W -> ï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½hï¿½ï¿½ï¿½Wï¿½iï¿½Zï¿½ï¿½ï¿½Ì’ï¿½ï¿½Sï¿½ï¿½Ô‚ï¿½ï¿½æ‚¤ï¿½ÉCï¿½ï¿½ï¿½j
     public Vector3 GridToWorldPosition(int x, int y)
     {
         float worldX = originPosition.x + (x * cellSize) + (cellSize * 0.5f);
@@ -44,7 +44,7 @@ public class GridManager : MonoBehaviour
         return new Vector3(worldX, worldY, 0);
     }
 
-    // ƒs[ƒX‚Ì”z’u‰Â”Û‚ðƒ`ƒFƒbƒN
+    // ï¿½sï¿½[ï¿½Xï¿½Ì”zï¿½uï¿½Â”Û‚ï¿½`ï¿½Fï¿½bï¿½N
     public bool CanPlacePiece(PieceController piece, Vector2Int gridPos)
     {
         foreach (Transform block in piece.transform)
@@ -62,6 +62,8 @@ public class GridManager : MonoBehaviour
             }
 
             if (grid[checkPos.x, checkPos.y] != null && grid[checkPos.x, checkPos.y] != piece.transform)
+            // gridï¿½É‚ï¿½blockï¿½ï¿½ï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½æ‚¤ï¿½É‚ï¿½ï¿½ï¿½
+            if (grid[checkPos.x, checkPos.y] != null && grid[checkPos.x, checkPos.y] != block)
             {
                 return false;
             }
@@ -69,9 +71,17 @@ public class GridManager : MonoBehaviour
         return true;
     }
 
-    // ƒs[ƒX‚ðƒOƒŠƒbƒh‚É“o˜^
+    // ï¿½sï¿½[ï¿½Xï¿½ï¿½Oï¿½ï¿½ï¿½bï¿½hï¿½É“oï¿½^
     public void RegisterPiece(PieceController piece, Vector2Int gridPos)
     {
+        if (!CanPlacePiece(piece, gridPos))
+        {
+            Debug.LogWarning("ï¿½ï¿½ï¿½ÌˆÊ’uï¿½É‚Íƒsï¿½[ï¿½Xï¿½ï¿½zï¿½uï¿½Å‚ï¿½ï¿½Ü‚ï¿½ï¿½ï¿½B");
+            return;
+        }
+
+        UnregisterPiece(piece);
+
         foreach (Transform block in piece.transform)
         {
             Vector3 worldOffset = piece.transform.TransformDirection(block.localPosition);
@@ -84,11 +94,12 @@ public class GridManager : MonoBehaviour
             if (registerPos.x >= 0 && registerPos.x < width && registerPos.y >= 0 && registerPos.y < height)
             {
                 grid[registerPos.x, registerPos.y] = piece.transform;
+                grid[registerPos.x, registerPos.y] = block; // blockï¿½ï¿½ï¿½gï¿½ï¿½oï¿½^
             }
         }
     }
 
-    // ƒs[ƒX‚Ì“o˜^‚ð‰ðœ
+    // ï¿½sï¿½[ï¿½Xï¿½Ì“oï¿½^ï¿½ï¿½ï¿½ï¿½
     public void UnregisterPiece(PieceController piece)
     {
         for (int y = 0; y < height; y++)
@@ -96,6 +107,8 @@ public class GridManager : MonoBehaviour
             for (int x = 0; x < width; x++)
             {
                 if (grid[x, y] == piece.transform)
+                // blockï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÌŽqï¿½ï¿½ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½Å‰ï¿½ï¿½
+                if (grid[x, y] != null && grid[x, y].parent == piece.transform)
                 {
                     grid[x, y] = null;
                 }
@@ -103,19 +116,20 @@ public class GridManager : MonoBehaviour
         }
     }
 
+
     void OnDrawGizmos()
     {
-        Gizmos.color = Color.gray; // Œ©‚â‚·‚¢‚æ‚¤‚ÉƒOƒŒ[‚É•ÏX
-        Vector3 offset = new Vector3(0, -0.5f, 0); // ‚²—v–]‚ÌƒIƒtƒZƒbƒg‚ðGizmo‚É‚à“K—p
+        Gizmos.color = Color.gray; // ï¿½ï¿½ï¿½â‚·ï¿½ï¿½ï¿½æ‚¤ï¿½ÉƒOï¿½ï¿½ï¿½[ï¿½É•ÏX
+        Vector3 offset = new Vector3(0, -0.5f, 0); // ï¿½ï¿½ï¿½vï¿½]ï¿½ÌƒIï¿½tï¿½Zï¿½bï¿½gï¿½ï¿½Gizmoï¿½É‚ï¿½Kï¿½p
 
-        // cü
+        // ï¿½cï¿½ï¿½
         for (int i = 0; i < width + 1; i++)
         {
             Vector3 startPos = originPosition + new Vector3(i * cellSize, 0, 0) + offset;
             Vector3 endPos = originPosition + new Vector3(i * cellSize, height * cellSize, 0) + offset;
             Gizmos.DrawLine(startPos, endPos);
         }
-        // ‰¡ü
+        // ï¿½ï¿½ï¿½ï¿½
         for (int i = 0; i < height + 1; i++)
         {
             Vector3 startPos = originPosition + new Vector3(0, i * cellSize, 0) + offset;
