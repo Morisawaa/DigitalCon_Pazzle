@@ -25,8 +25,8 @@ public class ShapeData : ScriptableObject
     [Tooltip("宿題や勉強等")]
     public string MinoType;
     [Header("パラメータの変動")]
-    public float ParentParameter;
     public float ChildParameter;
+    public float ParentParameter;
 
     //デバッグ関連
     [Header("デバッグ")]

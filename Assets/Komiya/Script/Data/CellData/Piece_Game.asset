@@ -10,21 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ab077062ecc05cf4eb49d5810cc40d3f, type: 3}
-  m_Name: Piece_School
+  m_Name: Piece_Game
   m_EditorClassIdentifier: 
   Cells:
-  - {x: -1, y: 1}
-  - {x: 0, y: 1}
   - {x: 0, y: 0}
-  - {x: 0, y: -1}
-  - {x: -1, y: -1}
   TextPos:
-  - {x: 0, y: 1}
   - {x: 0, y: 0}
-  - {x: 0, y: -1}
-  BlockChar: 530043004f00
+  BlockChar:
+  - GGG
   TextSize: 8
   MinoType: 
-  ParentParameter: 0
-  ChildParameter: 0
+  ChildParameter: 2
+  ParentParameter: -2
   GridSize: 5

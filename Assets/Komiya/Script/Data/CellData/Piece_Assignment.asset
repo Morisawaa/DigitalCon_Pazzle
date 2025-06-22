@@ -10,19 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ab077062ecc05cf4eb49d5810cc40d3f, type: 3}
-  m_Name: Piece_Outside
+  m_Name: Piece_Assignment
   m_EditorClassIdentifier: 
   Cells:
   - {x: 0, y: 0}
-  - {x: 0, y: 1}
   - {x: 0, y: -1}
-  - {x: 0, y: -2}
-  - {x: 1, y: -2}
   TextPos:
   - {x: 0, y: 0}
-  BlockChar: 4f00
+  BlockChar:
+  - Assignment
   TextSize: 8
   MinoType: 
-  ParentParameter: 0
-  ChildParameter: 0
+  ChildParameter: -1
+  ParentParameter: 1
   GridSize: 5

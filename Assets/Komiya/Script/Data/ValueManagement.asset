@@ -9,17 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ab077062ecc05cf4eb49d5810cc40d3f, type: 3}
-  m_Name: Piece_Assignment
+  m_Script: {fileID: 11500000, guid: 870fbabcf64f97b41b368f092f4b3e27, type: 3}
+  m_Name: ValueManagement
   m_EditorClassIdentifier: 
-  Cells:
-  - {x: 0, y: 0}
-  - {x: 0, y: -1}
-  TextPos:
-  - {x: 0, y: 0}
-  BlockChar: 4100
-  TextSize: 8
-  MinoType: 
-  ParentParameter: 0
-  ChildParameter: 0
-  GridSize: 5
+  InitialParentParamater: 3
+  InitialChildParamater: 3
+  InitialWhatDay: 0
+  MaxParameter: 10
+  ParentParameter: 3
+  ChildParameter: 3
+  WhatDay: 1

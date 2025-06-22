@@ -3,22 +3,38 @@ using UnityEngine.UI;
 
 public class ParameterGauge : MonoBehaviour
 {
-    [SerializeField] private DebugParameter DebugParameter_;
+    //
+    //他のスクリプトでParentParameter,ChilParameterを変更する場合、同じ個所でChangeGagueを呼び出してください
+    //Paramater引数には、ValueManagementのChildParamaterまたはParentParameterを利用してください。
+    //Targetイメージには呼び出し時に親子それぞれのImageを利用してください。
+    //Debug用にキー入力で値が変わるようになっています。
+    //
+
+
+
+
+    [Header("値管理データ[ValueManagement]のScriptableObject")]
+    [SerializeField] private ValueManagement ValueManagement_;
+
+    [Header("子供,親のパラメータを反映するイメージ")]
     [SerializeField] private Image ParentGauge;
     [SerializeField] private Image ChildGauge;
 
     private float MaxHeight;
-    // パラメータの最大値をインスペクターから設定できるようにする
-    private int MaxParameter = 10;
+    private int MaxParameter;
 
     private void Start()
     {
-        //現在はDebugParameterから、親子のパラメーターとその上限値を参照している
-        //必要な場合この参照先を変更
+        //Starで呼び出すとシーン遷移毎に初期化される心配あり
+        InitializeParamater();
 
-        if (DebugParameter_ == null)
+
+
+
+        if (ValueManagement_ == null)
         {
-            DebugParameter_ = GetComponent<DebugParameter>();
+            ValueManagement_ = GetComponent < ValueManagement>();
+            MaxParameter = ValueManagement_.MaxParameter;
         }
 
         // 親ゲージのsizeDeltaから最大の高さを取得する
@@ -32,11 +48,11 @@ public class ParameterGauge : MonoBehaviour
             Debug.LogError("ParentGaugeが設定されていません！");
             return;
         }
-        MaxParameter = DebugParameter_.MaxParameter;
+        MaxParameter = ValueManagement_.MaxParameter;
 
         // 各ゲージの高さを更新
-        ChangeGauge(DebugParameter_.ParentParameter, ParentGauge);
-        ChangeGauge(DebugParameter_.ChildParameter, ChildGauge);
+        ChangeGauge(ValueManagement_.ParentParameter, ParentGauge);
+        ChangeGauge(ValueManagement_.ChildParameter, ChildGauge);
     }
 
     private void Update()
@@ -44,35 +60,35 @@ public class ParameterGauge : MonoBehaviour
         //デバッグ用
         if (Input.GetKeyDown(KeyCode.I))
         {
-            DebugParameter_.ParentParameter++;
-            if(DebugParameter_.ParentParameter >= MaxParameter) DebugParameter_.ParentParameter = MaxParameter; 
+            ValueManagement_.ParentParameter++;
+            if(ValueManagement_.ParentParameter >= MaxParameter) ValueManagement_.ParentParameter = MaxParameter; 
 
-            ChangeGauge(DebugParameter_.ParentParameter, ParentGauge);
+            ChangeGauge(ValueManagement_.ParentParameter, ParentGauge);
         }
         if (Input.GetKeyDown(KeyCode.O))
         {
-            DebugParameter_.ChildParameter++;
-            if (DebugParameter_.ChildParameter >= MaxParameter) DebugParameter_.ChildParameter = MaxParameter;
+            ValueManagement_.ChildParameter++;
+            if (ValueManagement_.ChildParameter >= MaxParameter) ValueManagement_.ChildParameter = MaxParameter;
 
-            ChangeGauge(DebugParameter_.ChildParameter, ChildGauge);
+            ChangeGauge(ValueManagement_.ChildParameter, ChildGauge);
         }
         if (Input.GetKeyDown(KeyCode.K))
         {
-            DebugParameter_.ParentParameter--;
-            if (DebugParameter_.ParentParameter <= 0) DebugParameter_.ParentParameter = 0;
+            ValueManagement_.ParentParameter--;
+            if (ValueManagement_.ParentParameter <= 0) ValueManagement_.ParentParameter = 0;
 
-            ChangeGauge(DebugParameter_.ParentParameter, ParentGauge);
+            ChangeGauge(ValueManagement_.ParentParameter, ParentGauge);
         }
         if (Input.GetKeyDown(KeyCode.L))
         {
-            DebugParameter_.ChildParameter--;
-            if (DebugParameter_.ChildParameter <= 0) DebugParameter_.ChildParameter = 0;
+            ValueManagement_.ChildParameter--;
+            if (ValueManagement_.ChildParameter <= 0) ValueManagement_.ChildParameter = 0;
 
-            ChangeGauge(DebugParameter_.ChildParameter, ChildGauge);
+            ChangeGauge(ValueManagement_.ChildParameter, ChildGauge);
         }
     }
 
-    private void ChangeGauge(int Parameter, Image TargetImage)
+    public void ChangeGauge(int Parameter, Image TargetImage)
     {
         // 【修正点1】Nullチェックの条件を修正
         if (TargetImage == null)
@@ -100,5 +116,15 @@ public class ParameterGauge : MonoBehaviour
 
         // 【修正点3】変更したsizeをrectTransformに再設定する
         rectTransform.sizeDelta = size;
+    }
+
+    /// <summary>
+    /// 値の初期化
+    /// </summary>
+    public void InitializeParamater()
+    {
+        Debug.LogWarning("パラメータが初期化されました");
+        ValueManagement_.ParentParameter = ValueManagement_.InitialParentParamater;
+        ValueManagement_.ChildParameter = ValueManagement_.InitialChildParamater;
     }
 }
