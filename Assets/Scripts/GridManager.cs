@@ -1,4 +1,6 @@
+using Paramete;
 using UnityEngine;
+using Value;
 
 public class GridManager : MonoBehaviour
 {
@@ -9,6 +11,12 @@ public class GridManager : MonoBehaviour
     public int height = 4;
     public float cellSize = 1.0f;
     public Vector3 originPosition = Vector3.zero;
+
+    [Header("パラメーター管理")]
+    public ValueManagement valueManagement; // ValueManagementの参照をInspectorで設定
+
+    [Header("ゲージUI管理")]
+    public ParameterGauge parameterGauge; // ParameterGaugeの参照をInspectorで設定
 
     private Transform[,] grid;
 
@@ -73,6 +81,13 @@ public class GridManager : MonoBehaviour
     // ピースをグリッドに登録
     public void RegisterPiece(PieceController piece, Vector2Int gridPos)
     {
+        // 既に配置済みの場合は一度減算
+        if (piece.isPlaced && valueManagement != null && piece.shapeData != null)
+        {
+            valueManagement.ParentParameter -= Mathf.RoundToInt(piece.shapeData.ParentParameter);
+            valueManagement.ChildParameter -= Mathf.RoundToInt(piece.shapeData.ChildParameter);
+        }
+
         if (!CanPlacePiece(piece, gridPos))
         {
             Debug.LogWarning("この位置にはピースを配置できません。");
@@ -92,9 +107,30 @@ public class GridManager : MonoBehaviour
 
             if (registerPos.x >= 0 && registerPos.x < width && registerPos.y >= 0 && registerPos.y < height)
             {
-                grid[registerPos.x, registerPos.y] = block; // block自身を登録
+                grid[registerPos.x, registerPos.y] = block;
             }
         }
+
+        // 加算処理
+        if (valueManagement != null && piece.shapeData != null)
+        {
+            valueManagement.ParentParameter += Mathf.RoundToInt(piece.shapeData.ParentParameter);
+            valueManagement.ChildParameter += Mathf.RoundToInt(piece.shapeData.ChildParameter);
+        }
+
+        // --- ここでゲージを更新 ---
+        if (parameterGauge != null)
+        {
+            Debug.Log($"RegisterPiece: ParentParameter={valueManagement.ParentParameter}, ChildParameter={valueManagement.ChildParameter}");
+            parameterGauge.ChangeGauge(valueManagement.ParentParameter, GetParentGaugeImage());
+            parameterGauge.ChangeGauge(valueManagement.ChildParameter, GetChildGaugeImage());
+        }
+        else
+        {
+            Debug.LogError("parameterGaugeがnullです！");
+        }
+
+        piece.isPlaced = true;
     }
 
     // ピースの登録を解除
@@ -104,13 +140,42 @@ public class GridManager : MonoBehaviour
         {
             for (int x = 0; x < width; x++)
             {
-                // blockが自分の子かどうかで解除
                 if (grid[x, y] != null && grid[x, y].parent == piece.transform)
                 {
                     grid[x, y] = null;
                 }
             }
         }
+
+        if (piece.isPlaced && valueManagement != null && piece.shapeData != null)
+        {
+            valueManagement.ParentParameter -= Mathf.RoundToInt(piece.shapeData.ParentParameter);
+            valueManagement.ChildParameter -= Mathf.RoundToInt(piece.shapeData.ChildParameter);
+        }
+
+        // --- ここでゲージを更新 ---
+        if (parameterGauge != null)
+        {
+            Debug.Log($"UnregisterPiece: ParentParameter={valueManagement.ParentParameter}, ChildParameter={valueManagement.ChildParameter}");
+            parameterGauge.ChangeGauge(valueManagement.ParentParameter, GetParentGaugeImage());
+            parameterGauge.ChangeGauge(valueManagement.ChildParameter, GetChildGaugeImage());
+        }
+        else
+        {
+            Debug.LogError("parameterGaugeがnullです！");
+        }
+
+        piece.isPlaced = false;
+    }
+
+    // ParameterGaugeのImage取得用ヘルパー
+    private UnityEngine.UI.Image GetParentGaugeImage()
+    {
+        return parameterGauge != null ? parameterGauge.GetParentGaugeImage() : null;
+    }
+    private UnityEngine.UI.Image GetChildGaugeImage()
+    {
+        return parameterGauge != null ? parameterGauge.GetChildGaugeImage() : null;
     }
 
 
