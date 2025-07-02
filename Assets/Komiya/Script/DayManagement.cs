@@ -1,32 +1,41 @@
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class DayManagement : MonoBehaviour
+using Value;
+namespace Day
 {
-    [SerializeField] private ValueManagement ValueManagement_;
-
-    /// <summary>
-    /// 初期化
-    /// </summary>
-    private void InitialDay()
+    public class DayManagement : MonoBehaviour
     {
-        Debug.LogWarning("日付が初期化されました");
-        ValueManagement_.WhatDay = ValueManagement_.InitialWhatDay;
-    }
+        //==================================
+        //担当者:小宮純
+        //機能:日付変更&初期化
+        //==================================
 
-    /// <summary>
-    /// 次の日へ
-    /// </summary>
-    public void NextDay()
-    {
-        ValueManagement_.WhatDay++;
-    }
+        [SerializeField] private ValueManagement valueManagement;
 
-    /// <summary>
-    /// 前の日へ
-    /// </summary>
-    public void PreviousDay()
-    {
-        ValueManagement_.WhatDay--;
+        /// <summary>
+        /// 初期化
+        /// </summary>
+        private void InitialDay()
+        {
+            Debug.LogWarning("日付が初期化されました");
+            valueManagement.WhatDay = valueManagement.InitialWhatDay;
+        }
+
+        /// <summary>
+        /// 次の日へ
+        /// </summary>
+        public void NextDay()
+        {
+            valueManagement.WhatDay++;
+        }
+
+        /// <summary>
+        /// 前の日へ
+        /// </summary>
+        public void PreviousDay()
+        {
+            valueManagement.WhatDay--;
+        }
     }
 }
