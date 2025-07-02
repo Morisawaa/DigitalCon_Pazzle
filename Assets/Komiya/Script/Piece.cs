@@ -62,6 +62,8 @@ using Shape;
                 return;
             }
 
+
+
             for (int i = 0; i < shapeData.BlockChar.Count; i++)
             {
                 string character = shapeData.BlockChar[i];
@@ -73,8 +75,8 @@ using Shape;
 
                 newText.text = character.ToString();
                 newText.fontSize = shapeData.TextSize;
-            }
         }
+    }
         // ‰ñ“]ˆ—‚Ì–{‘Ì
         public void Rotate(bool clockwise)
         {
