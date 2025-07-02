@@ -6,26 +6,14 @@ namespace Paramete
 {
     public class ParameterGauge : MonoBehaviour
     {
-        //===========================================
-        //’S“–Ò:¬‹{ƒ
-        //‹@”\:eq‚Ìƒpƒ‰ƒ[ƒ^‚ğƒQ[ƒW‚É”½‰f
-        //===========================================
-
-
-        //
-        //‘¼‚ÌƒXƒNƒŠƒvƒg‚ÅParentParameter,ChilParameter‚ğ•ÏX‚·‚éê‡A“¯‚¶ŒÂŠ‚ÅChangeGague‚ğŒÄ‚Ño‚µ‚Ä‚­‚¾‚³‚¢
-        //Paramaterˆø”‚É‚ÍAValueManagement‚ÌChildParamater‚Ü‚½‚ÍParentParameter‚ğ—˜—p‚µ‚Ä‚­‚¾‚³‚¢B
-        //TargetƒCƒ[ƒW‚É‚ÍŒÄ‚Ño‚µ‚Éeq‚»‚ê‚¼‚ê‚ÌImage‚ğ—˜—p‚µ‚Ä‚­‚¾‚³‚¢B
-        //Debug—p‚ÉƒL[“ü—Í‚Å’l‚ª•Ï‚í‚é‚æ‚¤‚É‚È‚Á‚Ä‚¢‚Ü‚·B
-        //
 
 
 
 
-        [Header("’lŠÇ—ƒf[ƒ^[ValueManagement]‚ÌScriptableObject")]
+        [Header("ï¿½lï¿½Ç—ï¿½ï¿½fï¿½[ï¿½^[ValueManagement]ï¿½ï¿½ScriptableObject")]
         [SerializeField] private ValueManagement valueManagement;
 
-        [Header("q‹Ÿore‚Ìƒpƒ‰ƒ[ƒ^‚ğ”½‰f‚·‚éUI.Image")]
+        [Header("ï¿½qï¿½ï¿½orï¿½eï¿½Ìƒpï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½^ï¿½ğ”½‰fï¿½ï¿½ï¿½ï¿½UI.Image")]
         [SerializeField] private Image parentGauge;
         [SerializeField] private Image childGauge;
 
@@ -34,7 +22,7 @@ namespace Paramete
 
         private void Start()
         {
-            //Star‚ÅŒÄ‚Ño‚·‚ÆƒV[ƒ“‘JˆÚ–ˆ‚É‰Šú‰»‚³‚ê‚éS”z‚ ‚è
+
             InitializeParamater();
 
 
@@ -46,27 +34,24 @@ namespace Paramete
                 maxParameter = valueManagement.MaxParameter;
             }
 
-            // eƒQ[ƒW‚ÌsizeDelta‚©‚çÅ‘å‚Ì‚‚³‚ğæ“¾‚·‚é
-            // rect.height‚æ‚è‚àsizeDelta‚Ì•û‚ªˆÀ’è‚µ‚Ä‚¢‚é‚±‚Æ‚ª‘½‚¢‚Å‚·
+
             if (parentGauge != null)
             {
                 maxHeight = parentGauge.rectTransform.sizeDelta.y;
             }
             else
             {
-                Debug.LogError("ParentGauge‚ªİ’è‚³‚ê‚Ä‚¢‚Ü‚¹‚ñI");
+                Debug.LogError("ParentGaugeï¿½ï¿½ï¿½İ’è‚³ï¿½ï¿½Ä‚ï¿½ï¿½Ü‚ï¿½ï¿½ï¿½I");
                 return;
             }
             maxParameter = valueManagement.MaxParameter;
-
-            // ŠeƒQ[ƒW‚Ì‚‚³‚ğXV
             ChangeGauge(valueManagement.ParentParameter, parentGauge);
             ChangeGauge(valueManagement.ChildParameter, childGauge);
         }
 
         private void Update()
         {
-            //ƒfƒoƒbƒO—p
+
             if (Input.GetKeyDown(KeyCode.I))
             {
                 valueManagement.ParentParameter++;
@@ -100,42 +85,59 @@ namespace Paramete
 
         public void ChangeGauge(int Parameter, Image TargetImage)
         {
-            // yC³“_1zNullƒ`ƒFƒbƒN‚ÌğŒ‚ğC³
+
             if (TargetImage == null)
             {
-                // ƒGƒ‰[ƒƒbƒZ[ƒW‚ÌƒXƒyƒ‹‚àC³
-                Debug.LogError("TargetImage‚ªNull‚Å‚·");
+
+                Debug.LogError("TargetImageï¿½ï¿½Nullï¿½Å‚ï¿½");
                 return;
             }
 
             RectTransform rectTransform = TargetImage.rectTransform;
             Vector2 size = rectTransform.sizeDelta;
 
-            // yC³“_2z‚‚³‚ÌŒvZ•û–@‚ğC³
-            // ƒpƒ‰ƒ[ƒ^‚ª0–¢–‚É‚È‚ç‚È‚¢‚æ‚¤‚ÉClampi§ŒÀj‚·‚é
+
             float currentParameter = Mathf.Clamp(Parameter, 0, maxParameter);
 
-            // (Œ»İ’l / Å‘å’l) ‚ÌŠ„‡‚ğŒvZ
+
             float ratio = currentParameter / (float)maxParameter;
 
-            // Š„‡‚É‰‚¶‚Ä‚‚³‚ğŒvZ
+
             float newHeight = maxHeight * ratio;
 
-            // ŒvZ‚µ‚½‚‚³‚ğVector2‚Ìy‚Éİ’è
+
             size.y = newHeight;
 
-            // yC³“_3z•ÏX‚µ‚½size‚ğrectTransform‚ÉÄİ’è‚·‚é
+
             rectTransform.sizeDelta = size;
         }
 
         /// <summary>
-        /// ’l‚Ì‰Šú‰»
+        /// å€¤ã®åˆæœŸåŒ–
         /// </summary>
         public void InitializeParamater()
         {
-            Debug.LogWarning("ƒpƒ‰ƒ[ƒ^‚ª‰Šú‰»‚³‚ê‚Ü‚µ‚½");
+            Debug.LogWarning("ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ãƒ¼ã‚’åˆæœŸåŒ–ã—ã¾ã—ãŸ");
             valueManagement.ParentParameter = valueManagement.InitialParentParamater;
             valueManagement.ChildParameter = valueManagement.InitialChildParamater;
+        }
+
+        /// <summary>
+        /// è¦ªã‚²ãƒ¼ã‚¸ã®Imageã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚’å–å¾—
+        /// </summary>
+        /// <returns>è¦ªã‚²ãƒ¼ã‚¸ã®Imageã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆ</returns>
+        public Image GetParentGaugeImage()
+        {
+            return parentGauge;
+        }
+
+        /// <summary>
+        /// å­ã‚²ãƒ¼ã‚¸ã®Imageã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚’å–å¾—
+        /// </summary>
+        /// <returns>å­ã‚²ãƒ¼ã‚¸ã®Imageã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆ</returns>
+        public Image GetChildGaugeImage()
+        {
+            return childGauge;
         }
     }
 }
