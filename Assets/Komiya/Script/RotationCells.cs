@@ -1,25 +1,53 @@
 using UnityEngine;
 
-public class RotationCells : MonoBehaviour
+namespace Cell
 {
-    Piece Piece_;
+    //==========================================
+    //担当者:小宮純
+    //機能:クリックした時にブロックを回転
+    //==========================================
 
-    private void Start()
+    public class RotationCells : MonoBehaviour
     {
-        Piece_ = GetComponentInParent<Piece>();
+        Piece Piece_;
+        private Vector2 mouseDownPos;
+        private bool isMouseDown = false;
 
-    }
+        // ドラッグとみなす最小移動距離（この距離以上動いたらドラッグ）
+        private float dragThreshold = 0.1f;
 
-    private void Update()
-    {
-        if (Input.GetMouseButtonDown(0))
+        private void Start()
         {
-            Vector2 MousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            RaycastHit2D hit = Physics2D.Raycast(MousePos, Vector2.zero);
+            Piece_ = GetComponentInParent<Piece>();
+        }
 
-            if(hit.collider != null && hit.collider.gameObject == this.gameObject)
+        private void Update()
+        {
+            // マウスが押された瞬間の位置を記録
+            if (Input.GetMouseButtonDown(0))
             {
-                Piece_.Rotate(true);
+                isMouseDown = true;
+                mouseDownPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            }
+
+            // マウスが離されたとき、クリックかドラッグかを判断
+            if (Input.GetMouseButtonUp(0) && isMouseDown)
+            {
+                isMouseDown = false;
+                Vector2 mouseUpPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                float distance = Vector2.Distance(mouseDownPos, mouseUpPos);
+
+                if (distance < dragThreshold)
+                {
+                    // クリックと判断
+                    Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                    RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero);
+
+                    if (hit.collider != null && hit.collider.gameObject == this.gameObject)
+                    {
+                        Piece_.Rotate(true);
+                    }
+                }
             }
         }
     }
