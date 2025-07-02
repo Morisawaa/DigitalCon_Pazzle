@@ -1,7 +1,10 @@
 using UnityEngine;
+using Shape;
 
 public class PieceController : MonoBehaviour
 {
+    public ShapeData shapeData; // 追加: このピースのShapeData
+
     private Vector3 offset; // マウスカーソルとオブジェクト中心の差分
     private Vector3 initialPosition; // ドラッグ開始時の位置
     private Vector3 initialScale; // ドラッグ開始時のスケール

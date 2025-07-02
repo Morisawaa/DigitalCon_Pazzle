@@ -7,25 +7,25 @@ namespace Paramete
     public class ParameterGauge : MonoBehaviour
     {
         //===========================================
-        //’S“–Ò:¬‹{ƒ
-        //‹@”\:eq‚Ìƒpƒ‰ƒ[ƒ^‚ğƒQ[ƒW‚É”½‰f
+        //ï¿½Sï¿½ï¿½ï¿½ï¿½:ï¿½ï¿½ï¿½{ï¿½ï¿½
+        //ï¿½@ï¿½\:ï¿½eï¿½qï¿½Ìƒpï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½^ï¿½ï¿½ï¿½Qï¿½[ï¿½Wï¿½É”ï¿½ï¿½f
         //===========================================
 
 
         //
-        //‘¼‚ÌƒXƒNƒŠƒvƒg‚ÅParentParameter,ChilParameter‚ğ•ÏX‚·‚éê‡A“¯‚¶ŒÂŠ‚ÅChangeGague‚ğŒÄ‚Ño‚µ‚Ä‚­‚¾‚³‚¢
-        //Paramaterˆø”‚É‚ÍAValueManagement‚ÌChildParamater‚Ü‚½‚ÍParentParameter‚ğ—˜—p‚µ‚Ä‚­‚¾‚³‚¢B
-        //TargetƒCƒ[ƒW‚É‚ÍŒÄ‚Ño‚µ‚Éeq‚»‚ê‚¼‚ê‚ÌImage‚ğ—˜—p‚µ‚Ä‚­‚¾‚³‚¢B
-        //Debug—p‚ÉƒL[“ü—Í‚Å’l‚ª•Ï‚í‚é‚æ‚¤‚É‚È‚Á‚Ä‚¢‚Ü‚·B
+        //ï¿½ï¿½ï¿½ÌƒXï¿½Nï¿½ï¿½ï¿½vï¿½gï¿½ï¿½ParentParameter,ChilParameterï¿½ï¿½ÏXï¿½ï¿½ï¿½ï¿½ê‡ï¿½Aï¿½ï¿½ï¿½ï¿½ï¿½Âï¿½ï¿½ï¿½ChangeGagueï¿½ï¿½ï¿½Ä‚Ñoï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        //Paramaterï¿½ï¿½ï¿½ï¿½ï¿½É‚ÍAValueManagementï¿½ï¿½ChildParamaterï¿½Ü‚ï¿½ï¿½ï¿½ParentParameterï¿½ğ—˜—pï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
+        //Targetï¿½Cï¿½ï¿½ï¿½[ï¿½Wï¿½É‚ÍŒÄ‚Ñoï¿½ï¿½ï¿½ï¿½ï¿½Éeï¿½qï¿½ï¿½ï¿½ê‚¼ï¿½ï¿½ï¿½Imageï¿½ğ—˜—pï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
+        //Debugï¿½pï¿½ÉƒLï¿½[ï¿½ï¿½ï¿½Í‚Å’lï¿½ï¿½ï¿½Ï‚ï¿½ï¿½æ‚¤ï¿½É‚È‚ï¿½ï¿½Ä‚ï¿½ï¿½Ü‚ï¿½ï¿½B
         //
 
 
 
 
-        [Header("’lŠÇ—ƒf[ƒ^[ValueManagement]‚ÌScriptableObject")]
+        [Header("ï¿½lï¿½Ç—ï¿½ï¿½fï¿½[ï¿½^[ValueManagement]ï¿½ï¿½ScriptableObject")]
         [SerializeField] private ValueManagement valueManagement;
 
-        [Header("q‹Ÿore‚Ìƒpƒ‰ƒ[ƒ^‚ğ”½‰f‚·‚éUI.Image")]
+        [Header("ï¿½qï¿½ï¿½orï¿½eï¿½Ìƒpï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½^ï¿½ğ”½‰fï¿½ï¿½ï¿½ï¿½UI.Image")]
         [SerializeField] private Image parentGauge;
         [SerializeField] private Image childGauge;
 
@@ -34,7 +34,7 @@ namespace Paramete
 
         private void Start()
         {
-            //Star‚ÅŒÄ‚Ño‚·‚ÆƒV[ƒ“‘JˆÚ–ˆ‚É‰Šú‰»‚³‚ê‚éS”z‚ ‚è
+            //Starï¿½ÅŒÄ‚Ñoï¿½ï¿½ï¿½ÆƒVï¿½[ï¿½ï¿½ï¿½Jï¿½Ú–ï¿½ï¿½Éï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Sï¿½zï¿½ï¿½ï¿½ï¿½
             InitializeParamater();
 
 
@@ -46,27 +46,27 @@ namespace Paramete
                 maxParameter = valueManagement.MaxParameter;
             }
 
-            // eƒQ[ƒW‚ÌsizeDelta‚©‚çÅ‘å‚Ì‚‚³‚ğæ“¾‚·‚é
-            // rect.height‚æ‚è‚àsizeDelta‚Ì•û‚ªˆÀ’è‚µ‚Ä‚¢‚é‚±‚Æ‚ª‘½‚¢‚Å‚·
+            // ï¿½eï¿½Qï¿½[ï¿½Wï¿½ï¿½sizeDeltaï¿½ï¿½ï¿½ï¿½Å‘ï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½ï¿½æ“¾ï¿½ï¿½ï¿½ï¿½
+            // rect.heightï¿½ï¿½ï¿½ï¿½sizeDeltaï¿½Ì•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½è‚µï¿½Ä‚ï¿½ï¿½é‚±ï¿½Æ‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½
             if (parentGauge != null)
             {
                 maxHeight = parentGauge.rectTransform.sizeDelta.y;
             }
             else
             {
-                Debug.LogError("ParentGauge‚ªİ’è‚³‚ê‚Ä‚¢‚Ü‚¹‚ñI");
+                Debug.LogError("ParentGaugeï¿½ï¿½ï¿½İ’è‚³ï¿½ï¿½Ä‚ï¿½ï¿½Ü‚ï¿½ï¿½ï¿½I");
                 return;
             }
             maxParameter = valueManagement.MaxParameter;
 
-            // ŠeƒQ[ƒW‚Ì‚‚³‚ğXV
+            // ï¿½eï¿½Qï¿½[ï¿½Wï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V
             ChangeGauge(valueManagement.ParentParameter, parentGauge);
             ChangeGauge(valueManagement.ChildParameter, childGauge);
         }
 
         private void Update()
         {
-            //ƒfƒoƒbƒO—p
+            //ï¿½fï¿½oï¿½bï¿½Oï¿½p
             if (Input.GetKeyDown(KeyCode.I))
             {
                 valueManagement.ParentParameter++;
@@ -100,42 +100,64 @@ namespace Paramete
 
         public void ChangeGauge(int Parameter, Image TargetImage)
         {
-            // yC³“_1zNullƒ`ƒFƒbƒN‚ÌğŒ‚ğC³
+            Debug.Log($"ChangeGaugeå‘¼ã³å‡ºã—: Parameter={Parameter}, TargetImage={(TargetImage != null ? TargetImage.name : "null")}");
+            
+            // ã€ä¿®æ­£ç‚¹1ã€‘Nullãƒã‚§ãƒƒã‚¯ã®æ¡ä»¶ã‚’ä¿®æ­£
             if (TargetImage == null)
             {
-                // ƒGƒ‰[ƒƒbƒZ[ƒW‚ÌƒXƒyƒ‹‚àC³
-                Debug.LogError("TargetImage‚ªNull‚Å‚·");
+                // ã‚¨ãƒ©ãƒ¼ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã®ã‚¹ãƒšãƒ«ã‚‚ä¿®æ­£
+                Debug.LogError("TargetImageãŒNullã§ã™");
                 return;
             }
 
             RectTransform rectTransform = TargetImage.rectTransform;
             Vector2 size = rectTransform.sizeDelta;
 
-            // yC³“_2z‚‚³‚ÌŒvZ•û–@‚ğC³
-            // ƒpƒ‰ƒ[ƒ^‚ª0–¢–‚É‚È‚ç‚È‚¢‚æ‚¤‚ÉClampi§ŒÀj‚·‚é
+            // ã€ä¿®æ­£ç‚¹2ã€‘é«˜ã•ã®è¨ˆç®—æ–¹æ³•ã‚’ä¿®æ­£
+            // ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ãŒ0æœªæº€ã«ãªã‚‰ãªã„ã‚ˆã†ã«Clampï¼ˆåˆ¶é™ï¼‰ã™ã‚‹
             float currentParameter = Mathf.Clamp(Parameter, 0, maxParameter);
 
-            // (Œ»İ’l / Å‘å’l) ‚ÌŠ„‡‚ğŒvZ
+            // (ç¾åœ¨å€¤ / æœ€å¤§å€¤) ã®å‰²åˆã‚’è¨ˆç®—
             float ratio = currentParameter / (float)maxParameter;
 
-            // Š„‡‚É‰‚¶‚Ä‚‚³‚ğŒvZ
+            // å‰²åˆã«å¿œã˜ã¦é«˜ã•ã‚’è¨ˆç®—
             float newHeight = maxHeight * ratio;
 
-            // ŒvZ‚µ‚½‚‚³‚ğVector2‚Ìy‚Éİ’è
+            // è¨ˆç®—ã—ãŸé«˜ã•ã‚’Vector2ã®yã«è¨­å®š
             size.y = newHeight;
 
-            // yC³“_3z•ÏX‚µ‚½size‚ğrectTransform‚ÉÄİ’è‚·‚é
+            // ã€ä¿®æ­£ç‚¹3ã€‘å¤‰æ›´ã—ãŸsizeã‚’rectTransformã«å†è¨­å®šã™ã‚‹
             rectTransform.sizeDelta = size;
+            
+            Debug.Log($"ChangeGaugeå®Œäº†: æ–°ã—ã„é«˜ã•={newHeight}, æ¯”ç‡={ratio}");
         }
 
         /// <summary>
-        /// ’l‚Ì‰Šú‰»
+        /// lÌ
         /// </summary>
         public void InitializeParamater()
         {
-            Debug.LogWarning("ƒpƒ‰ƒ[ƒ^‚ª‰Šú‰»‚³‚ê‚Ü‚µ‚½");
+            Debug.LogWarning("p[^Ü‚");
             valueManagement.ParentParameter = valueManagement.InitialParentParamater;
             valueManagement.ChildParameter = valueManagement.InitialChildParamater;
+        }
+
+        /// <summary>
+        /// è¦ªã‚²ãƒ¼ã‚¸ã®Imageã‚’å–å¾—
+        /// </summary>
+        public Image GetParentGaugeImage()
+        {
+            Debug.Log($"GetParentGaugeImage: parentGauge={(parentGauge != null ? parentGauge.name : "null")}");
+            return parentGauge;
+        }
+
+        /// <summary>
+        /// å­ã‚²ãƒ¼ã‚¸ã®Imageã‚’å–å¾—
+        /// </summary>
+        public Image GetChildGaugeImage()
+        {
+            Debug.Log($"GetChildGaugeImage: childGauge={(childGauge != null ? childGauge.name : "null")}");
+            return childGauge;
         }
     }
 }
