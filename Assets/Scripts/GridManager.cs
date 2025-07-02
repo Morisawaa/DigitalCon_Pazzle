@@ -4,7 +4,7 @@ public class GridManager : MonoBehaviour
 {
     public static GridManager Instance { get; private set; }
 
-    [Header("�O���b�h�ݒ�")]
+    [Header("グリッド設定")]
     public int width = 4;
     public int height = 4;
     public float cellSize = 1.0f;
@@ -25,7 +25,7 @@ public class GridManager : MonoBehaviour
         grid = new Transform[width, height];
     }
 
-    // ���[���h���W -> �O���b�h���W
+    // ワールド座標 -> グリッド座標
     public Vector2Int WorldToGridPosition(Vector3 worldPosition)
     {
         int x = Mathf.FloorToInt((worldPosition.x - originPosition.x) / cellSize);
@@ -33,7 +33,7 @@ public class GridManager : MonoBehaviour
         return new Vector2Int(x, y);
     }
 
-    // �O���b�h���W -> ���[���h���W�i�Z���̒��S��Ԃ��悤�ɏC���j
+    // グリッド座標 -> ワールド座標（セルの中心を返すように修正）
     public Vector3 GridToWorldPosition(int x, int y)
     {
         float worldX = originPosition.x + (x * cellSize) + (cellSize * 0.5f);
@@ -44,7 +44,7 @@ public class GridManager : MonoBehaviour
         return new Vector3(worldX, worldY, 0);
     }
 
-    // �s�[�X�̔z�u�ۂ�`�F�b�N
+    // ピースの配置可否をチェック
     public bool CanPlacePiece(PieceController piece, Vector2Int gridPos)
     {
         foreach (Transform block in piece.transform)
@@ -61,8 +61,7 @@ public class GridManager : MonoBehaviour
                 return false;
             }
 
-            if (grid[checkPos.x, checkPos.y] != null && grid[checkPos.x, checkPos.y] != piece.transform)
-            // grid�ɂ�block���g������悤�ɂ���
+            // gridにはblock自身が入るようにする
             if (grid[checkPos.x, checkPos.y] != null && grid[checkPos.x, checkPos.y] != block)
             {
                 return false;
@@ -71,12 +70,12 @@ public class GridManager : MonoBehaviour
         return true;
     }
 
-    // �s�[�X��O���b�h�ɓo�^
+    // ピースをグリッドに登録
     public void RegisterPiece(PieceController piece, Vector2Int gridPos)
     {
         if (!CanPlacePiece(piece, gridPos))
         {
-            Debug.LogWarning("���̈ʒu�ɂ̓s�[�X��z�u�ł��܂���B");
+            Debug.LogWarning("この位置にはピースを配置できません。");
             return;
         }
 
@@ -93,21 +92,19 @@ public class GridManager : MonoBehaviour
 
             if (registerPos.x >= 0 && registerPos.x < width && registerPos.y >= 0 && registerPos.y < height)
             {
-                grid[registerPos.x, registerPos.y] = piece.transform;
-                grid[registerPos.x, registerPos.y] = block; // block���g��o�^
+                grid[registerPos.x, registerPos.y] = block; // block自身を登録
             }
         }
     }
 
-    // �s�[�X�̓o�^����
+    // ピースの登録を解除
     public void UnregisterPiece(PieceController piece)
     {
         for (int y = 0; y < height; y++)
         {
             for (int x = 0; x < width; x++)
             {
-                if (grid[x, y] == piece.transform)
-                // block�������̎q���ǂ����ŉ��
+                // blockが自分の子かどうかで解除
                 if (grid[x, y] != null && grid[x, y].parent == piece.transform)
                 {
                     grid[x, y] = null;
@@ -119,17 +116,17 @@ public class GridManager : MonoBehaviour
 
     void OnDrawGizmos()
     {
-        Gizmos.color = Color.gray; // ���₷���悤�ɃO���[�ɕύX
-        Vector3 offset = new Vector3(0, -0.5f, 0); // ���v�]�̃I�t�Z�b�g��Gizmo�ɂ�K�p
+        Gizmos.color = Color.gray; // 見やすいようにグレーに変更
+        Vector3 offset = new Vector3(0, -0.5f, 0); // ご要望のオフセットをGizmoにも適用
 
-        // �c��
+        // 縦線
         for (int i = 0; i < width + 1; i++)
         {
             Vector3 startPos = originPosition + new Vector3(i * cellSize, 0, 0) + offset;
             Vector3 endPos = originPosition + new Vector3(i * cellSize, height * cellSize, 0) + offset;
             Gizmos.DrawLine(startPos, endPos);
         }
-        // ����
+        // 横線
         for (int i = 0; i < height + 1; i++)
         {
             Vector3 startPos = originPosition + new Vector3(0, i * cellSize, 0) + offset;
