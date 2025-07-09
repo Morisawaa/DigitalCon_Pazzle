@@ -26,6 +26,25 @@ namespace Paramete
         [SerializeField] private ValueManagement valueManagement;
 
         [Header("�q��or�e�̃p�����[�^�𔽉f����UI.Image")]
+        //担当者:小宮純
+        //機能:親子のパラメータをゲージに反映
+        //===========================================
+
+
+        //
+        //他のスクリプトでParentParameter,ChilParameterを変更する場合、同じ個所でChangeGagueを呼び出してください
+        //Paramater引数には、ValueManagementのChildParamaterまたはParentParameterを利用してください。
+        //Targetイメージには呼び出し時に親子それぞれのImageを利用してください。
+        //Debug用にキー入力で値が変わるようになっています。
+        //
+
+
+
+
+        [Header("値管理データ[ValueManagement]のScriptableObject")]
+        [SerializeField] private ValueManagement valueManagement;
+
+        [Header("子供or親のパラメータを反映するUI.Image")]
         [SerializeField] private Image parentGauge;
         [SerializeField] private Image childGauge;
 
@@ -34,7 +53,11 @@ namespace Paramete
 
         private void Start()
         {
+
             //Star�ŌĂяo���ƃV�[���J�ږ��ɏ����������S�z����
+=======
+            //Starで呼び出すとシーン遷移毎に初期化される心配あり
+
             InitializeParamater();
 
 
@@ -46,27 +69,44 @@ namespace Paramete
                 maxParameter = valueManagement.MaxParameter;
             }
 
+
             // �e�Q�[�W��sizeDelta����ő�̍������擾����
             // rect.height����sizeDelta�̕������肵�Ă��邱�Ƃ������ł�
+=======
+            // 親ゲージのsizeDeltaから最大の高さを取得する
+            // rect.heightよりもsizeDeltaの方が安定していることが多いです
+
             if (parentGauge != null)
             {
                 maxHeight = parentGauge.rectTransform.sizeDelta.y;
             }
             else
             {
+
                 Debug.LogError("ParentGauge���ݒ肳��Ă��܂���I");
+=======
+                Debug.LogError("ParentGaugeが設定されていません！");
+
                 return;
             }
             maxParameter = valueManagement.MaxParameter;
 
+
             // �e�Q�[�W�̍������X�V
+=======
+            // 各ゲージの高さを更新
+
             ChangeGauge(valueManagement.ParentParameter, parentGauge);
             ChangeGauge(valueManagement.ChildParameter, childGauge);
         }
 
         private void Update()
         {
+
             //�f�o�b�O�p
+=======
+            //デバッグ用
+
             if (Input.GetKeyDown(KeyCode.I))
             {
                 valueManagement.ParentParameter++;
@@ -133,11 +173,19 @@ namespace Paramete
         }
 
         /// <summary>
+
         /// l̏
         /// </summary>
         public void InitializeParamater()
         {
             Debug.LogWarning("p[^܂");
+=======
+        /// 値の初期化
+        /// </summary>
+        public void InitializeParamater()
+        {
+            Debug.LogWarning("パラメータが初期化されました");
+
             valueManagement.ParentParameter = valueManagement.InitialParentParamater;
             valueManagement.ChildParameter = valueManagement.InitialChildParamater;
         }

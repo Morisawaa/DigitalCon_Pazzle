@@ -2,6 +2,7 @@ using Paramete;
 using UnityEngine;
 using Value;
 
+
 public class GridManager : MonoBehaviour
 {
     public static GridManager Instance { get; private set; }
@@ -15,8 +16,10 @@ public class GridManager : MonoBehaviour
     [Header("パラメーター管理")]
     public ValueManagement valueManagement; // ValueManagementの参照をInspectorで設定
 
+
     [Header("ゲージUI管理")]
     public ParameterGauge parameterGauge; // ParameterGaugeの参照をInspectorで設定
+
 
     private Transform[,] grid;
 
@@ -41,7 +44,7 @@ public class GridManager : MonoBehaviour
         return new Vector2Int(x, y);
     }
 
-    // グリッド座標 -> ワールド座標（セルの中心を返すように修正）
+    // グリッド座標 -> ワールド座標（セルの中心を返す）
     public Vector3 GridToWorldPosition(int x, int y)
     {
         float worldX = originPosition.x + (x * cellSize) + (cellSize * 0.5f);
@@ -69,7 +72,6 @@ public class GridManager : MonoBehaviour
                 return false;
             }
 
-            // gridにはblock自身が入るようにする
             if (grid[checkPos.x, checkPos.y] != null && grid[checkPos.x, checkPos.y] != block)
             {
                 return false;
@@ -86,6 +88,7 @@ public class GridManager : MonoBehaviour
         {
             valueManagement.ParentParameter -= Mathf.RoundToInt(piece.shapeData.ParentParameter);
             valueManagement.ChildParameter -= Mathf.RoundToInt(piece.shapeData.ChildParameter);
+
         }
 
         if (!CanPlacePiece(piece, gridPos))
@@ -94,8 +97,10 @@ public class GridManager : MonoBehaviour
             return;
         }
 
+        // グリッドから一旦外す
         UnregisterPiece(piece);
 
+        // 新しい位置に登録
         foreach (Transform block in piece.transform)
         {
             Vector3 worldOffset = piece.transform.TransformDirection(block.localPosition);
@@ -116,6 +121,7 @@ public class GridManager : MonoBehaviour
         {
             valueManagement.ParentParameter += Mathf.RoundToInt(piece.shapeData.ParentParameter);
             valueManagement.ChildParameter += Mathf.RoundToInt(piece.shapeData.ChildParameter);
+
         }
 
         // --- ここでゲージを更新 ---
@@ -128,6 +134,7 @@ public class GridManager : MonoBehaviour
         else
         {
             Debug.LogError("parameterGaugeがnullです！");
+
         }
 
         piece.isPlaced = true;
@@ -147,10 +154,12 @@ public class GridManager : MonoBehaviour
             }
         }
 
+
         if (piece.isPlaced && valueManagement != null && piece.shapeData != null)
         {
             valueManagement.ParentParameter -= Mathf.RoundToInt(piece.shapeData.ParentParameter);
             valueManagement.ChildParameter -= Mathf.RoundToInt(piece.shapeData.ChildParameter);
+
         }
 
         // --- ここでゲージを更新 ---
@@ -176,22 +185,22 @@ public class GridManager : MonoBehaviour
     private UnityEngine.UI.Image GetChildGaugeImage()
     {
         return parameterGauge != null ? parameterGauge.GetChildGaugeImage() : null;
+
     }
+
 
 
     void OnDrawGizmos()
     {
-        Gizmos.color = Color.gray; // 見やすいようにグレーに変更
-        Vector3 offset = new Vector3(0, -0.5f, 0); // ご要望のオフセットをGizmoにも適用
+        Gizmos.color = Color.gray;
+        Vector3 offset = new Vector3(0, -0.5f, 0);
 
-        // 縦線
         for (int i = 0; i < width + 1; i++)
         {
             Vector3 startPos = originPosition + new Vector3(i * cellSize, 0, 0) + offset;
             Vector3 endPos = originPosition + new Vector3(i * cellSize, height * cellSize, 0) + offset;
             Gizmos.DrawLine(startPos, endPos);
         }
-        // 横線
         for (int i = 0; i < height + 1; i++)
         {
             Vector3 startPos = originPosition + new Vector3(0, i * cellSize, 0) + offset;
