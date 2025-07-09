@@ -7,13 +7,30 @@ namespace Paramete
     public class ParameterGauge : MonoBehaviour
     {
 
-
-
-
         [Header("�l�Ǘ��f�[�^[ValueManagement]��ScriptableObject")]
         [SerializeField] private ValueManagement valueManagement;
 
         [Header("�q��or�e�̃p�����[�^�𔽉f����UI.Image")]
+
+        //担当者:小宮純
+        //機能:親子のパラメータをゲージに反映
+        //===========================================
+
+
+        //
+        //他のスクリプトでParentParameter,ChilParameterを変更する場合、同じ個所でChangeGagueを呼び出してください
+        //Paramater引数には、ValueManagementのChildParamaterまたはParentParameterを利用してください。
+        //Targetイメージには呼び出し時に親子それぞれのImageを利用してください。
+        //Debug用にキー入力で値が変わるようになっています。
+        //
+
+
+
+
+        [Header("値管理データ[ValueManagement]のScriptableObject")]
+        [SerializeField] private ValueManagement valueManagement;
+
+        [Header("子供or親のパラメータを反映するUI.Image")]
         [SerializeField] private Image parentGauge;
         [SerializeField] private Image childGauge;
 
@@ -22,6 +39,7 @@ namespace Paramete
 
         private void Start()
         {
+
 
             InitializeParamater();
 
@@ -35,22 +53,21 @@ namespace Paramete
             }
 
 
+
             if (parentGauge != null)
             {
                 maxHeight = parentGauge.rectTransform.sizeDelta.y;
             }
             else
             {
-                Debug.LogError("ParentGauge���ݒ肳��Ă��܂���I");
-                return;
-            }
-            maxParameter = valueManagement.MaxParameter;
+
             ChangeGauge(valueManagement.ParentParameter, parentGauge);
             ChangeGauge(valueManagement.ChildParameter, childGauge);
         }
 
         private void Update()
         {
+
 
             if (Input.GetKeyDown(KeyCode.I))
             {
@@ -86,10 +103,6 @@ namespace Paramete
         public void ChangeGauge(int Parameter, Image TargetImage)
         {
 
-            if (TargetImage == null)
-            {
-
-                Debug.LogError("TargetImage��Null�ł�");
                 return;
             }
 
@@ -97,46 +110,24 @@ namespace Paramete
             Vector2 size = rectTransform.sizeDelta;
 
 
-            float currentParameter = Mathf.Clamp(Parameter, 0, maxParameter);
-
-
-            float ratio = currentParameter / (float)maxParameter;
-
-
-            float newHeight = maxHeight * ratio;
-
-
-            size.y = newHeight;
-
-
             rectTransform.sizeDelta = size;
+            
+            Debug.Log($"ChangeGauge完了: 新しい高さ={newHeight}, 比率={ratio}");
         }
 
         /// <summary>
-        /// 値の初期化
-        /// </summary>
-        public void InitializeParamater()
-        {
-            Debug.LogWarning("パラメーターを初期化しました");
+
             valueManagement.ParentParameter = valueManagement.InitialParentParamater;
             valueManagement.ChildParameter = valueManagement.InitialChildParamater;
         }
 
         /// <summary>
-        /// 親ゲージのImageコンポーネントを取得
-        /// </summary>
-        /// <returns>親ゲージのImageコンポーネント</returns>
-        public Image GetParentGaugeImage()
-        {
+
             return parentGauge;
         }
 
         /// <summary>
-        /// 子ゲージのImageコンポーネントを取得
-        /// </summary>
-        /// <returns>子ゲージのImageコンポーネント</returns>
-        public Image GetChildGaugeImage()
-        {
+
             return childGauge;
         }
     }
