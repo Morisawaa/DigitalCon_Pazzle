@@ -1,4 +1,6 @@
 using UnityEngine;
+using Value;
+using Shape;
 
 public class GridManager : MonoBehaviour
 {
@@ -9,6 +11,9 @@ public class GridManager : MonoBehaviour
     public int height = 4;
     public float cellSize = 1.0f;
     public Vector3 originPosition = Vector3.zero;
+
+    [Header("パラメーター管理")]
+    public ValueManagement valueManagement; // ValueManagementの参照をInspectorで設定
 
     private Transform[,] grid;
 
@@ -33,7 +38,7 @@ public class GridManager : MonoBehaviour
         return new Vector2Int(x, y);
     }
 
-    // グリッド座標 -> ワールド座標（セルの中心を返すように修正）
+    // グリッド座標 -> ワールド座標（セルの中心を返す）
     public Vector3 GridToWorldPosition(int x, int y)
     {
         float worldX = originPosition.x + (x * cellSize) + (cellSize * 0.5f);
@@ -61,7 +66,6 @@ public class GridManager : MonoBehaviour
                 return false;
             }
 
-            // gridにはblock自身が入るようにする
             if (grid[checkPos.x, checkPos.y] != null && grid[checkPos.x, checkPos.y] != block)
             {
                 return false;
@@ -73,14 +77,25 @@ public class GridManager : MonoBehaviour
     // ピースをグリッドに登録
     public void RegisterPiece(PieceController piece, Vector2Int gridPos)
     {
+        // 既に配置済みの場合は一度減算
+        if (piece.isPlaced && valueManagement != null && piece.shapeData != null)
+        {
+            valueManagement.ParentParameter -= Mathf.RoundToInt(piece.shapeData.ParentParameter);
+            valueManagement.ChildParameter -= Mathf.RoundToInt(piece.shapeData.ChildParameter);
+            Debug.Log($"ParentParameter減算後: {valueManagement.ParentParameter}");
+            Debug.Log($"ChildParameter減算後: {valueManagement.ChildParameter}");
+        }
+
         if (!CanPlacePiece(piece, gridPos))
         {
             Debug.LogWarning("この位置にはピースを配置できません。");
             return;
         }
 
+        // グリッドから一旦外す
         UnregisterPiece(piece);
 
+        // 新しい位置に登録
         foreach (Transform block in piece.transform)
         {
             Vector3 worldOffset = piece.transform.TransformDirection(block.localPosition);
@@ -92,9 +107,24 @@ public class GridManager : MonoBehaviour
 
             if (registerPos.x >= 0 && registerPos.x < width && registerPos.y >= 0 && registerPos.y < height)
             {
-                grid[registerPos.x, registerPos.y] = block; // block自身を登録
+                grid[registerPos.x, registerPos.y] = block;
             }
         }
+
+        // 加算処理
+        if (valueManagement != null && piece.shapeData != null)
+        {
+            valueManagement.ParentParameter += Mathf.RoundToInt(piece.shapeData.ParentParameter);
+            valueManagement.ChildParameter += Mathf.RoundToInt(piece.shapeData.ChildParameter);
+            Debug.Log($"ParentParameter加算後: {valueManagement.ParentParameter}");
+            Debug.Log($"ChildParameter加算後: {valueManagement.ChildParameter}");
+        }
+        else
+        {
+            Debug.LogWarning("ValueManagementまたはShapeDataが設定されていません。");
+        }
+
+        piece.isPlaced = true;
     }
 
     // ピースの登録を解除
@@ -104,29 +134,38 @@ public class GridManager : MonoBehaviour
         {
             for (int x = 0; x < width; x++)
             {
-                // blockが自分の子かどうかで解除
                 if (grid[x, y] != null && grid[x, y].parent == piece.transform)
                 {
                     grid[x, y] = null;
                 }
             }
         }
+
+        // ここでValueManagementからShapeData分を減算
+        if (piece.isPlaced && valueManagement != null && piece.shapeData != null)
+        {
+            valueManagement.ParentParameter -= Mathf.RoundToInt(piece.shapeData.ParentParameter);
+            valueManagement.ChildParameter -= Mathf.RoundToInt(piece.shapeData.ChildParameter);
+            Debug.Log($"ParentParameter減算後: {valueManagement.ParentParameter}");
+            Debug.Log($"ChildParameter減算後: {valueManagement.ChildParameter}");
+        }
+
+        piece.isPlaced = false;
     }
+
 
 
     void OnDrawGizmos()
     {
-        Gizmos.color = Color.gray; // 見やすいようにグレーに変更
-        Vector3 offset = new Vector3(0, -0.5f, 0); // ご要望のオフセットをGizmoにも適用
+        Gizmos.color = Color.gray;
+        Vector3 offset = new Vector3(0, -0.5f, 0);
 
-        // 縦線
         for (int i = 0; i < width + 1; i++)
         {
             Vector3 startPos = originPosition + new Vector3(i * cellSize, 0, 0) + offset;
             Vector3 endPos = originPosition + new Vector3(i * cellSize, height * cellSize, 0) + offset;
             Gizmos.DrawLine(startPos, endPos);
         }
-        // 横線
         for (int i = 0; i < height + 1; i++)
         {
             Vector3 startPos = originPosition + new Vector3(0, i * cellSize, 0) + offset;
