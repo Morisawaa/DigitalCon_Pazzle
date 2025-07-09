@@ -17,6 +17,10 @@ public class GridManager : MonoBehaviour
     public ValueManagement valueManagement; // ValueManagementの参照をInspectorで設定
 
 
+    [Header("ゲージUI管理")]
+    public ParameterGauge parameterGauge; // ParameterGaugeの参照をInspectorで設定
+
+
     private Transform[,] grid;
 
     void Awake()
@@ -120,6 +124,19 @@ public class GridManager : MonoBehaviour
 
         }
 
+        // --- ここでゲージを更新 ---
+        if (parameterGauge != null)
+        {
+            Debug.Log($"RegisterPiece: ParentParameter={valueManagement.ParentParameter}, ChildParameter={valueManagement.ChildParameter}");
+            parameterGauge.ChangeGauge(valueManagement.ParentParameter, GetParentGaugeImage());
+            parameterGauge.ChangeGauge(valueManagement.ChildParameter, GetChildGaugeImage());
+        }
+        else
+        {
+            Debug.LogError("parameterGaugeがnullです！");
+
+        }
+
         piece.isPlaced = true;
     }
 
@@ -142,6 +159,32 @@ public class GridManager : MonoBehaviour
         {
             valueManagement.ParentParameter -= Mathf.RoundToInt(piece.shapeData.ParentParameter);
             valueManagement.ChildParameter -= Mathf.RoundToInt(piece.shapeData.ChildParameter);
+
+        }
+
+        // --- ここでゲージを更新 ---
+        if (parameterGauge != null)
+        {
+            Debug.Log($"UnregisterPiece: ParentParameter={valueManagement.ParentParameter}, ChildParameter={valueManagement.ChildParameter}");
+            parameterGauge.ChangeGauge(valueManagement.ParentParameter, GetParentGaugeImage());
+            parameterGauge.ChangeGauge(valueManagement.ChildParameter, GetChildGaugeImage());
+        }
+        else
+        {
+            Debug.LogError("parameterGaugeがnullです！");
+        }
+
+        piece.isPlaced = false;
+    }
+
+    // ParameterGaugeのImage取得用ヘルパー
+    private UnityEngine.UI.Image GetParentGaugeImage()
+    {
+        return parameterGauge != null ? parameterGauge.GetParentGaugeImage() : null;
+    }
+    private UnityEngine.UI.Image GetChildGaugeImage()
+    {
+        return parameterGauge != null ? parameterGauge.GetChildGaugeImage() : null;
 
     }
 
