@@ -1,6 +1,7 @@
+using Paramete;
 using UnityEngine;
 using Value;
-using Shape;
+
 
 public class GridManager : MonoBehaviour
 {
@@ -14,6 +15,7 @@ public class GridManager : MonoBehaviour
 
     [Header("パラメーター管理")]
     public ValueManagement valueManagement; // ValueManagementの参照をInspectorで設定
+
 
     private Transform[,] grid;
 
@@ -82,8 +84,7 @@ public class GridManager : MonoBehaviour
         {
             valueManagement.ParentParameter -= Mathf.RoundToInt(piece.shapeData.ParentParameter);
             valueManagement.ChildParameter -= Mathf.RoundToInt(piece.shapeData.ChildParameter);
-            Debug.Log($"ParentParameter減算後: {valueManagement.ParentParameter}");
-            Debug.Log($"ChildParameter減算後: {valueManagement.ChildParameter}");
+
         }
 
         if (!CanPlacePiece(piece, gridPos))
@@ -116,12 +117,7 @@ public class GridManager : MonoBehaviour
         {
             valueManagement.ParentParameter += Mathf.RoundToInt(piece.shapeData.ParentParameter);
             valueManagement.ChildParameter += Mathf.RoundToInt(piece.shapeData.ChildParameter);
-            Debug.Log($"ParentParameter加算後: {valueManagement.ParentParameter}");
-            Debug.Log($"ChildParameter加算後: {valueManagement.ChildParameter}");
-        }
-        else
-        {
-            Debug.LogWarning("ValueManagementまたはShapeDataが設定されていません。");
+
         }
 
         piece.isPlaced = true;
@@ -141,16 +137,12 @@ public class GridManager : MonoBehaviour
             }
         }
 
-        // ここでValueManagementからShapeData分を減算
+
         if (piece.isPlaced && valueManagement != null && piece.shapeData != null)
         {
             valueManagement.ParentParameter -= Mathf.RoundToInt(piece.shapeData.ParentParameter);
             valueManagement.ChildParameter -= Mathf.RoundToInt(piece.shapeData.ChildParameter);
-            Debug.Log($"ParentParameter減算後: {valueManagement.ParentParameter}");
-            Debug.Log($"ChildParameter減算後: {valueManagement.ChildParameter}");
-        }
 
-        piece.isPlaced = false;
     }
 
 
