@@ -17,10 +17,6 @@ public class GridManager : MonoBehaviour
     public ValueManagement valueManagement; // ValueManagementの参照をInspectorで設定
 
 
-    [Header("ゲージUI管理")]
-    public ParameterGauge parameterGauge; // ParameterGaugeの参照をInspectorで設定
-
-
     private Transform[,] grid;
 
     void Awake()
@@ -181,6 +177,7 @@ public class GridManager : MonoBehaviour
     private UnityEngine.UI.Image GetParentGaugeImage()
     {
         return parameterGauge != null ? parameterGauge.GetParentGaugeImage() : null;
+
     }
     private UnityEngine.UI.Image GetChildGaugeImage()
     {
